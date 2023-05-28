@@ -16,4 +16,16 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/cards" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/note_add"
+        android:backgroundTint="@color/white"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

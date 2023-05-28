@@ -1,5 +1,6 @@
 package com.example.noteme
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -14,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setStatusBarStyle()
+        setButtonAdd()
         setContentView(binding.root)
     }
 
@@ -24,7 +26,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId==R.id.menu_add){
-            Toast.makeText(this,"Agregar Nuevo Cliente", Toast.LENGTH_SHORT).show()
+            val agregarNota = Intent(this, Activity_NoteEdit::class.java)
+            startActivity(agregarNota)
         }
 
         return super.onOptionsItemSelected(item)
@@ -35,6 +38,13 @@ class MainActivity : AppCompatActivity() {
             title = "Note Me"
             elevation = 0f
             setDisplayShowHomeEnabled(true)
+        }
+    }
+
+    private fun setButtonAdd(){
+        binding.addActionButton.setOnClickListener{
+            val agregarNota = Intent(this, Activity_NoteEdit::class.java)
+            startActivity(agregarNota)
         }
     }
 }
