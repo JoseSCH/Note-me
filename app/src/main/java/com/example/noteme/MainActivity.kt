@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
         binding.rvRecycler.layoutManager = LinearLayoutManager(this)
         adapter = NoteAdapter(NoteList)
         binding.rvRecycler.adapter = adapter
-        addHundredNotes()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -66,14 +65,8 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun addHundredNotes(){
-       val newNote = Model(
-            "XD",
-            "XD",
-            "XD"
-        )
-        for(i in 1..100){
-            NoteList.add(newNote)
-        }
+    override fun onRestart() {
+
+        super.onRestart()
     }
 }
