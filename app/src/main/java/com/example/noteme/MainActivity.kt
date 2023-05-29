@@ -7,16 +7,24 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.noteme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: NoteAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setStatusBarStyle()
         setButtonAdd()
         setContentView(binding.root)
+        binding.rvRecycler.layoutManager = LinearLayoutManager(this)
+        adapter = NoteAdapter(NoteList)
+        binding.rvRecycler.adapter = adapter
+        addHundredNotes()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -26,8 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId==R.id.menu_add){
-            val agregarNota = Intent(this, Activity_NoteEdit::class.java)
-            startActivity(agregarNota)
+            val addNota = Intent(this, Activity_NoteEdit::class.java)
+            startActivity(addNota)
         }
 
         return super.onOptionsItemSelected(item)
@@ -45,6 +53,27 @@ class MainActivity : AppCompatActivity() {
         binding.addActionButton.setOnClickListener{
             val agregarNota = Intent(this, Activity_NoteEdit::class.java)
             startActivity(agregarNota)
+        }
+    }
+
+    companion object{
+        var NoteList: ArrayList<Model> = arrayListOf(
+            Model(
+                "Erase una vez",
+                "Hubo una vez que todo en este mundo se perdio de la nada",
+                "12/05/2029"
+            )
+        )
+    }
+
+    private fun addHundredNotes(){
+       val newNote = Model(
+            "XD",
+            "XD",
+            "XD"
+        )
+        for(i in 1..100){
+            NoteList.add(newNote)
         }
     }
 }

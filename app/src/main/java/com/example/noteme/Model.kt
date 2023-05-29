@@ -1,7 +1,7 @@
 package com.example.noteme
 
 data class Model(
-    val nota: String,
     val title: String,
+    val nota: String,
     val date: String
 )
