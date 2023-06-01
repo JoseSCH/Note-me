@@ -1,2 +1,2 @@
 # Note-me
-Inicio de proyecto Note-me, un simple gestor de notas.
+Aquí se deposita todo el material usado en cuanto a diseño de la app.
