@@ -39,9 +39,9 @@
                 android:ems="10"
                 android:gravity="center"
                 android:inputType="textMultiLine"
-                android:maxLength="50"
                 android:text="Título"
-                android:textSize="35dp"
+                android:textSize="30dp"
+                android:maxLines="2"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:layout_editor_absoluteY="58dp" />
 

@@ -1,12 +1,14 @@
 package com.example.noteme
 
 import android.animation.ArgbEvaluator
+import android.content.Intent
 import android.graphics.Color
 import android.icu.text.MessagePattern.ArgType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.noteme.MainActivity.Companion.flag
 import com.example.noteme.databinding.CardsBinding
 import java.util.Random
 
@@ -38,8 +40,17 @@ class NoteAdapter(var dataList: List<Model>) : RecyclerView.Adapter<NoteAdapter.
         holder.binding.RVNota.setBackgroundColor(randomColor)
         holder.binding.RVFecha.setBackgroundColor(randomColor)
         holder.binding.RVTitulo.setBackgroundColor(randomColor)
+
+        //listener en caso de presionar una nota para editar.
+        holder.binding.editCardView.setOnClickListener{
+            val editar = Intent(holder.itemView.context, Activity_NoteEdit::class.java)
+            editar.putExtra("position", position)
+            flag = true
+            holder.itemView.context.startActivity(editar)
+        }
     }
 
+    //Obtener la cantidad de items.
     override fun getItemCount(): Int {
         return dataList.size
     }
