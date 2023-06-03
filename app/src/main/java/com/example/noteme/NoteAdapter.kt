@@ -27,11 +27,11 @@ class NoteAdapter(var dataList: List<Model>) : RecyclerView.Adapter<NoteAdapter.
         holder.binding.RVNota.text = note.nota
         holder.binding.RVFecha.text = note.date
 
-        //generar color aleatorio para la carta.
+        //generar color aleatorio para la carta (modificado para que genere colores mas claros).
         val alpha = 255
-        val red = random.nextInt(156) + 100
-        val green = random.nextInt(156)
-        val blue = random.nextInt(156) + 100
+        val red = random.nextInt(100) + 150
+        val green = random.nextInt(100) + 150
+        val blue = random.nextInt(100) + 150
 
         val randomColor = Color.argb(alpha, red, green, blue)
 

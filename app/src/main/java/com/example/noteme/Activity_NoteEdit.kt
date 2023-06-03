@@ -1,19 +1,15 @@
 package com.example.noteme
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Intent
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.Toast
 import com.example.noteme.MainActivity.Companion.NoteList
 import com.example.noteme.MainActivity.Companion.flag
 import com.example.noteme.databinding.ActivityNoteEditBinding
-import java.util.Calendar
 
 class Activity_NoteEdit : AppCompatActivity() {
     private lateinit var binding: ActivityNoteEditBinding
@@ -33,6 +29,12 @@ class Activity_NoteEdit : AppCompatActivity() {
                 setDisplayShowHomeEnabled(true)
             }
         }
+
+        //Listener para menu popup
+        /*binding.notesEditTextMult.setOnLongClickListener{
+            mostrarMenuPopup()
+            true
+        }*/
     }
 
 
@@ -74,9 +76,9 @@ class Activity_NoteEdit : AppCompatActivity() {
 
     //función para guardar la nota.
     private fun guardarNota(){
-        var title = binding.editTitle.text.toString()
-        var nota = binding.notesEditTextMult.text.toString()
-        var nueva_nota = Model(
+        val title = binding.editTitle.text.toString()
+        val nota = binding.notesEditTextMult.text.toString()
+        val nueva_nota = Model(
             title,
             nota,
             Model_obj.date
@@ -88,7 +90,7 @@ class Activity_NoteEdit : AppCompatActivity() {
     //función para actualizar la nota.
     private fun actualizarNota(){
         if(intent.hasExtra("position")){
-            var pocision = intent.getIntExtra("position", 0)
+            val pocision = intent.getIntExtra("position", 0)
 
             NoteList[pocision].title = binding.editTitle.text.toString()
             NoteList[pocision].nota = binding.notesEditTextMult.text.toString()
@@ -104,7 +106,7 @@ class Activity_NoteEdit : AppCompatActivity() {
     private fun eliminarNota(){
         if(intent.hasExtra("position")){
             builder = AlertDialog.Builder(this)
-            var posicion = intent.getIntExtra("position", 0)
+            val posicion = intent.getIntExtra("position", 0)
 
             builder.setTitle("¿Esta seguro que desea borrar esta nota?")
                 .setMessage("Esta accion es irreversible!!!")
@@ -128,7 +130,7 @@ class Activity_NoteEdit : AppCompatActivity() {
     //función para agregar contenido en caso de edición de nota.
     private fun setContent(){
         if(intent.hasExtra("position")){
-            var pocision = intent.getIntExtra("position", 0)
+            val pocision = intent.getIntExtra("position", 0)
 
             supportActionBar?.apply {
                 title = NoteList[pocision].date
@@ -146,11 +148,26 @@ class Activity_NoteEdit : AppCompatActivity() {
 
     }
 
-    //Guardar nota en como respaldo en caso de que se cierre o en caso de olvidar guardar.
-    override fun finish() {
-        if(!flag){
-            guardarNota()
+
+    //Funcion para mostrar el menu popup
+    /*private fun mostrarMenuPopup(){
+        val popup = PopupMenu(this, null)
+
+        popup.menuInflater.inflate(R.menu.menu_popup, popup.menu)
+
+        popup.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.action_1 -> {
+                    //Accion1
+                }
+                R.id.action_2 -> {
+                    //Accion2
+                }
+            }
+
+            true
         }
-        super.finish()
-    }
+
+        popup.show()
+    }*/
 }
