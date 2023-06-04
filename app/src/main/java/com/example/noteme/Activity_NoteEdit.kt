@@ -1,19 +1,26 @@
 package com.example.noteme
 
 import android.app.AlertDialog
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
-import com.example.noteme.MainActivity.Companion.NoteList
+import com.example.noteme.MainActivity.Companion.dataBaseInstance
 import com.example.noteme.MainActivity.Companion.flag
 import com.example.noteme.databinding.ActivityNoteEditBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.util.Random
 
 class Activity_NoteEdit : AppCompatActivity() {
     private lateinit var binding: ActivityNoteEditBinding
     private lateinit var builder : AlertDialog.Builder
+    private var randomColor = 0
+    private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,19 +29,30 @@ class Activity_NoteEdit : AppCompatActivity() {
 
         //Seleccionar si editar o crear.
         if(flag){
-            setContent()
+            GlobalScope.launch {
+                setContent()
+            }
         }else{
             supportActionBar?.apply {
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
             }
+
+            newColor()
         }
 
-        //Listener para menu popup
-        /*binding.notesEditTextMult.setOnLongClickListener{
-            mostrarMenuPopup()
-            true
-        }*/
+        //Listener de texto.
+        binding.notesEditTextMult.setOnLongClickListener{ view ->
+            when(actionMode){
+                null -> {
+                    actionMode = view.startActionMode(floatingActionMode, ActionMode.TYPE_FLOATING)
+                    view.isActivated = true
+                    true
+                }
+                else -> false
+            }
+        }
+
     }
 
 
@@ -53,12 +71,26 @@ class Activity_NoteEdit : AppCompatActivity() {
     //Listeners para cada opcion del menu.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == R.id.menu_save){
-            if(flag){
-                actualizarNota()
-            }else{
-                guardarNota()
+
+            if(binding.editTitle.text.toString().isEmpty()){
+                binding.editTitle.error = "Este campo es requerido"
+                binding.editTitle.requestFocus()
+            }else if(binding.notesEditTextMult.text.toString().isEmpty()) {
+                binding.notesEditTextMult.error = "Este campo es requerido"
+                binding.notesEditTextMult.requestFocus()
+            }else {
+
+                GlobalScope.launch {
+                    if (flag) {
+                        actualizarNota()
+                    } else {
+                        guardarNota()
+                    }
+                }
+
+                finish()
+
             }
-            finish()
         }
 
         //Para que al presionar la flecha de retroceso regrese a la vista anterior.
@@ -68,52 +100,58 @@ class Activity_NoteEdit : AppCompatActivity() {
         }
 
         if(item.itemId == R.id.menu_delete){
-            eliminarNota()
+                eliminarNota()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
     //función para guardar la nota.
-    private fun guardarNota(){
+    private suspend fun guardarNota(){
+
         val title = binding.editTitle.text.toString()
         val nota = binding.notesEditTextMult.text.toString()
-        val nueva_nota = Model(
+        val nueva_nota = Model(0,
             title,
             nota,
-            Model_obj.date
+            Model_obj.date,
+            randomColor
         )
 
-        NoteList.add(nueva_nota)
+        dataBaseInstance?.NoteDAO()?.guardarNota(nueva_nota)
     }
 
     //función para actualizar la nota.
     private fun actualizarNota(){
-        if(intent.hasExtra("position")){
-            val pocision = intent.getIntExtra("position", 0)
+        if(intent.hasExtra("id")){
+            val id = intent.getIntExtra("id", 0)
 
-            NoteList[pocision].title = binding.editTitle.text.toString()
-            NoteList[pocision].nota = binding.notesEditTextMult.text.toString()
-            NoteList[pocision].date = Model_obj.date
-            finish()
+            val nota = dataBaseInstance?.NoteDAO()?.soloUnaNota(id)
+            nota?.title = binding.editTitle.text.toString()
+            nota?.nota = binding.notesEditTextMult.text.toString()
+            nota?.date = Model_obj.date
+
+            dataBaseInstance?.NoteDAO()?.actualizarNota(nota!!)
         }else{
             Toast.makeText(this, "No se pudo actualizar nota", Toast.LENGTH_LONG).show()
-            finish()
         }
     }
 
     //Función para eliminar la nota.
     private fun eliminarNota(){
-        if(intent.hasExtra("position")){
+        if(intent.hasExtra("id")){
             builder = AlertDialog.Builder(this)
-            val posicion = intent.getIntExtra("position", 0)
+            val id = intent.getIntExtra("id", 0)
 
             builder.setTitle("¿Esta seguro que desea borrar esta nota?")
                 .setMessage("Esta accion es irreversible!!!")
                 .setCancelable(true)
                 .setPositiveButton("Si"){dialogInterface, it ->
                     Toast.makeText(this, "Eliminando...", Toast.LENGTH_SHORT).show()
-                    NoteList.removeAt(posicion)
+                    GlobalScope.launch {
+                        val nota = dataBaseInstance?.NoteDAO()?.soloUnaNota(id)
+                        dataBaseInstance?.NoteDAO()?.eliminarNota(nota!!)
+                    }
                     finish()
                 }
                 .setNegativeButton("No"){dialogInterface, it ->
@@ -129,18 +167,28 @@ class Activity_NoteEdit : AppCompatActivity() {
 
     //función para agregar contenido en caso de edición de nota.
     private fun setContent(){
-        if(intent.hasExtra("position")){
-            val pocision = intent.getIntExtra("position", 0)
+        if(intent.hasExtra("id")){
+            val id = intent.getIntExtra("id", 0)
+
+            val nota = dataBaseInstance?.NoteDAO()?.soloUnaNota(id)
 
             supportActionBar?.apply {
-                title = NoteList[pocision].date
+                title = nota?.date
                 elevation = 0f
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
             }
 
-            binding.editTitle.setText(NoteList[pocision].title)
-            binding.notesEditTextMult.setText(NoteList[pocision].nota)
+            //Establecer el color al editar Notas.
+            val colorInt: Int = nota?.color ?: 0
+
+            binding.notesEditTextMult.setBackgroundColor(colorInt)
+            binding.editTitle.setBackgroundColor(colorInt)
+            binding.notesCardView.setCardBackgroundColor(colorInt)
+            binding.titleCardView.setCardBackgroundColor(colorInt)
+
+            binding.editTitle.setText(nota?.title)
+            binding.notesEditTextMult.setText(nota?.nota)
         }else{
             Toast.makeText(this, "No se pudieron obtener datos", Toast.LENGTH_LONG).show()
             finish()
@@ -148,26 +196,44 @@ class Activity_NoteEdit : AppCompatActivity() {
 
     }
 
+    //Función para añadirle color a una nueva carta.
+    private fun newColor(){
+        val random = Random()
 
-    //Funcion para mostrar el menu popup
-    /*private fun mostrarMenuPopup(){
-        val popup = PopupMenu(this, null)
+        //generar color aleatorio para la carta (modificado para que genere colores mas claros).
+        val alpha = 255
+        val red = random.nextInt(100) + 150
+        val green = random.nextInt(100) + 150
+        val blue = random.nextInt(100) + 150
 
-        popup.menuInflater.inflate(R.menu.menu_popup, popup.menu)
+        randomColor = Color.argb(alpha, red, green, blue)
 
-        popup.setOnMenuItemClickListener {
-            when(it.itemId){
-                R.id.action_1 -> {
-                    //Accion1
-                }
-                R.id.action_2 -> {
-                    //Accion2
-                }
-            }
+        binding.notesEditTextMult.setBackgroundColor(randomColor)
+        binding.editTitle.setBackgroundColor(randomColor)
+        binding.notesCardView.setCardBackgroundColor(randomColor)
+        binding.titleCardView.setCardBackgroundColor(randomColor)
+    }
 
-            true
+
+    //establecer Action mode personalizado
+
+    private val floatingActionMode = object : ActionMode.Callback2() {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+           menuInflater.inflate(R.menu.menu_popup, menu)
+           return true
         }
 
-        popup.show()
-    }*/
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+           return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+           return false
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+           actionMode = null
+        }
+    }
+
 }

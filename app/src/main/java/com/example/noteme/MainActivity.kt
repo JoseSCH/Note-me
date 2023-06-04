@@ -9,7 +9,13 @@ import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.RoomDatabase
 import com.example.noteme.databinding.ActivityMainBinding
+import com.example.noteme.room.NotesDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
@@ -21,11 +27,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setActionBarStyle()
         setButtonAdd()
-        getActualDate()
+
+        GlobalScope.launch {
+            getActualDate()
+        }
+
         setContentView(binding.root)
+
+        dataBaseInstance = NotesDatabase.getDatabase(this)
+
         binding.rvRecycler.layoutManager = LinearLayoutManager(this)
-        adapter = NoteAdapter(NoteList)
-        binding.rvRecycler.adapter = adapter
+        cargarNotas()
     }
 
     //inflar menu.
@@ -60,19 +72,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    //Cargar los datos desde nuestra base de datos.
+    private fun cargarNotas(){
+        GlobalScope.launch(Dispatchers.IO) {
+
+            listNotes = dataBaseInstance!!.NoteDAO().ListarNotas()
+
+            withContext(Dispatchers.Main){
+                adapter = listNotes?.let { NoteAdapter(it) }!!
+                binding.rvRecycler.adapter = adapter
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
     //Objetos compartidos.
     companion object{
         //flags para vistas
         var flag = false
 
-        //Lista de notas
-        var NoteList: ArrayList<Model> = arrayListOf(
-            Model(
-                "Erase una vez",
-                "Hubo una vez que todo en este mundo se perdio de la nada",
-                "12/05/2029"
-            )
-        )
+        var listNotes: MutableList<Model> = mutableListOf()
+        var dataBaseInstance: NotesDatabase? = null
     }
 
     //funcion para obtener la fecha actual.
@@ -86,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     //Funcion para actualizar el adaptador
     override fun onRestart() {
-        adapter.notifyDataSetChanged()
+        cargarNotas()
         super.onRestart()
     }
 }

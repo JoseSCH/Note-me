@@ -12,6 +12,9 @@
         <!-- FontFamily -->
         <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">@font/pacifico_regular</item>
+
+        <!-- Alert -->
+        <item name="android:alertDialogStyle">@style/Theme.AppCompat.DayNight</item>
     </style>
 
 </resources>

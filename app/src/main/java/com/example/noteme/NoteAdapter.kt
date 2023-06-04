@@ -21,30 +21,21 @@ class NoteAdapter(var dataList: List<Model>) : RecyclerView.Adapter<NoteAdapter.
     }
 
     override fun onBindViewHolder(holder: UserHolder, position: Int) {
-        val random = Random()
         var note = dataList.get(position)
         holder.binding.RVTitulo.text = note.title
         holder.binding.RVNota.text = note.nota
         holder.binding.RVFecha.text = note.date
 
-        //generar color aleatorio para la carta (modificado para que genere colores mas claros).
-        val alpha = 255
-        val red = random.nextInt(100) + 150
-        val green = random.nextInt(100) + 150
-        val blue = random.nextInt(100) + 150
-
-        val randomColor = Color.argb(alpha, red, green, blue)
-
-        //agregar color aleatorio a la carta.
-        holder.binding.LinearCard.setBackgroundColor(randomColor)
-        holder.binding.RVNota.setBackgroundColor(randomColor)
-        holder.binding.RVFecha.setBackgroundColor(randomColor)
-        holder.binding.RVTitulo.setBackgroundColor(randomColor)
+        //agregar color a la carta según la base de datos.
+        holder.binding.LinearCard.setBackgroundColor(note.color)
+        holder.binding.RVNota.setBackgroundColor(note.color)
+        holder.binding.RVFecha.setBackgroundColor(note.color)
+        holder.binding.RVTitulo.setBackgroundColor(note.color)
 
         //listener en caso de presionar una nota para editar.
         holder.binding.editCardView.setOnClickListener{
             val editar = Intent(holder.itemView.context, Activity_NoteEdit::class.java)
-            editar.putExtra("position", position)
+            editar.putExtra("id", note.id)
             flag = true
             holder.itemView.context.startActivity(editar)
         }

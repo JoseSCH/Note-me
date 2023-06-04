@@ -48,10 +48,12 @@
                     android:ems="10"
                     android:gravity="center"
                     android:inputType="textMultiLine"
-                    android:text="Título"
+                    android:hint="Título"
+                    android:textColorHint="@color/black"
                     android:textSize="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    tools:layout_editor_absoluteY="58dp" />
+                    tools:layout_editor_absoluteY="58dp"
+                    android:textCursorDrawable="@drawable/custom_cursor"/>
 
 
             </androidx.cardview.widget.CardView>
@@ -81,7 +83,9 @@
                     android:gravity="start|center"
                     android:inputType="textMultiLine"
                     android:minHeight="48dp"
-                    android:text="Escriba aquí" />
+                    android:hint="Aquí comienza un camino..."
+                    android:textColorHint="@color/black"
+                    android:textCursorDrawable="@drawable/custom_cursor"/>
 
             </androidx.cardview.widget.CardView>
 
