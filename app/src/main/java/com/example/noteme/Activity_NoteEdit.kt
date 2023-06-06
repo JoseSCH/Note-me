@@ -20,7 +20,6 @@ class Activity_NoteEdit : AppCompatActivity() {
     private lateinit var binding: ActivityNoteEditBinding
     private lateinit var builder : AlertDialog.Builder
     private var randomColor = 0
-    private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,18 +38,6 @@ class Activity_NoteEdit : AppCompatActivity() {
             }
 
             newColor()
-        }
-
-        //Listener de texto.
-        binding.notesEditTextMult.setOnLongClickListener{ view ->
-            when(actionMode){
-                null -> {
-                    actionMode = view.startActionMode(floatingActionMode, ActionMode.TYPE_FLOATING)
-                    view.isActivated = true
-                    true
-                }
-                else -> false
-            }
         }
 
     }
@@ -212,28 +199,6 @@ class Activity_NoteEdit : AppCompatActivity() {
         binding.editTitle.setBackgroundColor(randomColor)
         binding.notesCardView.setCardBackgroundColor(randomColor)
         binding.titleCardView.setCardBackgroundColor(randomColor)
-    }
-
-
-    //establecer Action mode personalizado
-
-    private val floatingActionMode = object : ActionMode.Callback2() {
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-           menuInflater.inflate(R.menu.menu_popup, menu)
-           return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-           return false
-        }
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-           return false
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode) {
-           actionMode = null
-        }
     }
 
 }

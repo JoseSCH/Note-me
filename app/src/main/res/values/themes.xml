@@ -7,14 +7,22 @@
         <!-- Status bar color. -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
-        <!-- Background -->
-        <item name="android:background">@color/white</item>
         <!-- FontFamily -->
         <item name="android:textColor">@color/black</item>
         <item name="android:fontFamily">@font/pacifico_regular</item>
 
         <!-- Alert -->
         <item name="android:alertDialogStyle">@style/Theme.AppCompat.DayNight</item>
+
+        <!-- Aplicando estilo para recyclerView -->
+        <item name="recyclerViewStyle">@style/Theme.NoteMe.RVD</item>
+    </style>
+
+    <!-- Estilo para el recycleView -->
+    <style name="Theme.NoteMe.RVD">
+
+        <item name="android:background">@color/white</item>
+
     </style>
 
 </resources>

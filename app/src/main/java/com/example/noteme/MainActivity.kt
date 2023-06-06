@@ -3,11 +3,13 @@ package com.example.noteme
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.RoomDatabase
 import com.example.noteme.databinding.ActivityMainBinding
@@ -33,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContentView(binding.root)
-
         dataBaseInstance = NotesDatabase.getDatabase(this)
 
         binding.rvRecycler.layoutManager = LinearLayoutManager(this)
@@ -110,4 +111,5 @@ class MainActivity : AppCompatActivity() {
         cargarNotas()
         super.onRestart()
     }
+
 }

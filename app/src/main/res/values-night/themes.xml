@@ -6,8 +6,6 @@
         <item name="colorOnPrimary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorOnPrimary</item>
-        <!-- Background -->
-        <item name="android:background">@color/black</item>
         <!-- FontFamily -->
         <item name="android:textColor">@color/black</item>
         <item name="android:editTextColor">@color/black</item>
@@ -18,5 +16,15 @@
 
         <!-- Alert -->
         <item name="android:alertDialogStyle">@style/Theme.AppCompat.DayNight</item>
+        <!-- Aplicando estilo para recyclerView -->
+        <item name="recyclerViewStyle">@style/Theme.NoteMe.RVN</item>
     </style>
+
+    <!-- Estilo para el recycleView -->
+    <style name="Theme.NoteMe.RVN">
+
+        <item name="android:background">@color/black</item>
+
+    </style>
+
 </resources>
