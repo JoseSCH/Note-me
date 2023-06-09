@@ -16,12 +16,23 @@
 
         <!-- Alert -->
         <item name="android:alertDialogStyle">@style/Theme.AppCompat.DayNight</item>
+
         <!-- Aplicando estilo para recyclerView -->
         <item name="recyclerViewStyle">@style/Theme.NoteMe.RVN</item>
+
+        <!-- Aplicando estilo al ScrollView -->
+        <item name="android:scrollViewStyle">@style/Theme.NoteMe.SVN</item>
     </style>
 
     <!-- Estilo para el recycleView -->
     <style name="Theme.NoteMe.RVN">
+
+        <item name="android:background">@color/black</item>
+
+    </style>
+
+    <!-- Estilo para el ScrollView -->
+    <style name="Theme.NoteMe.SVN">
 
         <item name="android:background">@color/black</item>
 

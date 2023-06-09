@@ -1,7 +1,6 @@
 package com.example.noteme.room
 
 import android.content.Context
-import com.example.noteme.Model
 
 import androidx.room.Database
 import androidx.room.Room

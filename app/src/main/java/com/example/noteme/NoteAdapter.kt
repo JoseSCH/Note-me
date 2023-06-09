@@ -1,25 +1,14 @@
 package com.example.noteme
 
-import android.animation.ArgbEvaluator
 import android.content.Intent
-import android.graphics.Color
-import android.icu.text.MessagePattern.ArgType
 import android.view.ActionMode
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.noteme.MainActivity.Companion.flag
 import com.example.noteme.databinding.CardsBinding
-import java.util.Random
+import com.example.noteme.room.Model
 
 class NoteAdapter(var dataList: List<Model>) : RecyclerView.Adapter<NoteAdapter.UserHolder>() {
     inner class UserHolder(val binding: CardsBinding) : RecyclerView.ViewHolder(binding.root)

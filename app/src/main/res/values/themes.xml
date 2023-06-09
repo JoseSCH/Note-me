@@ -16,10 +16,20 @@
 
         <!-- Aplicando estilo para recyclerView -->
         <item name="recyclerViewStyle">@style/Theme.NoteMe.RVD</item>
+
+        <!-- Aplicando estilo al ScrollView -->
+        <item name="android:scrollViewStyle">@style/Theme.NoteMe.SVD</item>
     </style>
 
     <!-- Estilo para el recycleView -->
     <style name="Theme.NoteMe.RVD">
+
+        <item name="android:background">@color/white</item>
+
+    </style>
+
+    <!-- Estilo para el ScrollView -->
+    <style name="Theme.NoteMe.SVD">
 
         <item name="android:background">@color/white</item>
 

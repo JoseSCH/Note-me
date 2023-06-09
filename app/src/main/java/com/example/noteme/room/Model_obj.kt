@@ -1,4 +1,4 @@
-package com.example.noteme
+package com.example.noteme.room
 
 object Model_obj {
     var date = ""

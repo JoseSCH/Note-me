@@ -4,14 +4,16 @@ import android.app.AlertDialog
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.noteme.MainActivity.Companion.dataBaseInstance
 import com.example.noteme.MainActivity.Companion.flag
 import com.example.noteme.databinding.ActivityNoteEditBinding
+import com.example.noteme.room.Model
+import com.example.noteme.room.Model_obj
+import com.example.noteme.viewModel.noteViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Random
@@ -19,12 +21,15 @@ import java.util.Random
 class Activity_NoteEdit : AppCompatActivity() {
     private lateinit var binding: ActivityNoteEditBinding
     private lateinit var builder : AlertDialog.Builder
+    private lateinit var viewModel: noteViewModel
     private var randomColor = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNoteEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(noteViewModel::class.java)
 
         //Seleccionar si editar o crear.
         if(flag){
@@ -105,20 +110,23 @@ class Activity_NoteEdit : AppCompatActivity() {
             randomColor
         )
 
-        dataBaseInstance?.NoteDAO()?.guardarNota(nueva_nota)
+        viewModel.guardarNota(nueva_nota)
+
     }
 
     //función para actualizar la nota.
-    private fun actualizarNota(){
+    private suspend fun actualizarNota(){
         if(intent.hasExtra("id")){
             val id = intent.getIntExtra("id", 0)
 
-            val nota = dataBaseInstance?.NoteDAO()?.soloUnaNota(id)
-            nota?.title = binding.editTitle.text.toString()
-            nota?.nota = binding.notesEditTextMult.text.toString()
-            nota?.date = Model_obj.date
+            val nota =  viewModel.soloUnaNota(id)
 
-            dataBaseInstance?.NoteDAO()?.actualizarNota(nota!!)
+            nota.title = binding.editTitle.toString()
+            nota.nota = binding.notesEditTextMult.toString()
+            nota.date = Model_obj.date
+
+            viewModel.actualizarNota(nota)
+
         }else{
             Toast.makeText(this, "No se pudo actualizar nota", Toast.LENGTH_LONG).show()
         }
@@ -136,8 +144,8 @@ class Activity_NoteEdit : AppCompatActivity() {
                 .setPositiveButton("Si"){dialogInterface, it ->
                     Toast.makeText(this, "Eliminando...", Toast.LENGTH_SHORT).show()
                     GlobalScope.launch {
-                        val nota = dataBaseInstance?.NoteDAO()?.soloUnaNota(id)
-                        dataBaseInstance?.NoteDAO()?.eliminarNota(nota!!)
+                        val nota = viewModel.soloUnaNota(id)
+                        viewModel.eliminarNota(nota)
                     }
                     finish()
                 }
@@ -153,29 +161,29 @@ class Activity_NoteEdit : AppCompatActivity() {
     }
 
     //función para agregar contenido en caso de edición de nota.
-    private fun setContent(){
+    private suspend fun setContent(){
         if(intent.hasExtra("id")){
             val id = intent.getIntExtra("id", 0)
 
-            val nota = dataBaseInstance?.NoteDAO()?.soloUnaNota(id)
+            val nota = viewModel.soloUnaNota(id)
 
             supportActionBar?.apply {
-                title = nota?.date
+                title = nota.date
                 elevation = 0f
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
             }
 
             //Establecer el color al editar Notas.
-            val colorInt: Int = nota?.color ?: 0
+            val colorInt: Int = nota.color
 
             binding.notesEditTextMult.setBackgroundColor(colorInt)
             binding.editTitle.setBackgroundColor(colorInt)
             binding.notesCardView.setCardBackgroundColor(colorInt)
             binding.titleCardView.setCardBackgroundColor(colorInt)
 
-            binding.editTitle.setText(nota?.title)
-            binding.notesEditTextMult.setText(nota?.nota)
+            binding.editTitle.setText(nota.title)
+            binding.notesEditTextMult.setText(nota.nota)
         }else{
             Toast.makeText(this, "No se pudieron obtener datos", Toast.LENGTH_LONG).show()
             finish()
