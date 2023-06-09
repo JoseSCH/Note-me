@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -17,6 +18,7 @@ import com.example.noteme.viewModel.noteViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Random
+import kotlin.math.log
 
 class Activity_NoteEdit : AppCompatActivity() {
     private lateinit var binding: ActivityNoteEditBinding
@@ -121,8 +123,8 @@ class Activity_NoteEdit : AppCompatActivity() {
 
             val nota =  viewModel.soloUnaNota(id)
 
-            nota.title = binding.editTitle.toString()
-            nota.nota = binding.notesEditTextMult.toString()
+            nota.title = binding.editTitle.text.toString()
+            nota.nota = binding.notesEditTextMult.text.toString()
             nota.date = Model_obj.date
 
             viewModel.actualizarNota(nota)
