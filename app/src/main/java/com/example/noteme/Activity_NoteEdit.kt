@@ -9,7 +9,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import com.example.noteme.MainActivity.Companion.dataBaseInstance
 import com.example.noteme.MainActivity.Companion.flag
 import com.example.noteme.databinding.ActivityNoteEditBinding
 import com.example.noteme.room.Model
@@ -109,7 +108,8 @@ class Activity_NoteEdit : AppCompatActivity() {
             title,
             nota,
             Model_obj.date,
-            randomColor
+            randomColor.toLong(),
+            null
         )
 
         viewModel.guardarNota(nueva_nota)
@@ -119,15 +119,15 @@ class Activity_NoteEdit : AppCompatActivity() {
     //función para actualizar la nota.
     private suspend fun actualizarNota(){
         if(intent.hasExtra("id")){
-            val id = intent.getIntExtra("id", 0)
+            val id = intent.getStringExtra("id")?: ""
 
             val nota =  viewModel.soloUnaNota(id)
 
-            nota.title = binding.editTitle.text.toString()
-            nota.nota = binding.notesEditTextMult.text.toString()
-            nota.date = Model_obj.date
+            nota?.title = binding.editTitle.text.toString()
+            nota?.nota = binding.notesEditTextMult.text.toString()
+            nota?.date = Model_obj.date
 
-            viewModel.actualizarNota(nota)
+            viewModel.actualizarNota(nota!!)
 
         }else{
             Toast.makeText(this, "No se pudo actualizar nota", Toast.LENGTH_LONG).show()
@@ -138,7 +138,7 @@ class Activity_NoteEdit : AppCompatActivity() {
     private fun eliminarNota(){
         if(intent.hasExtra("id")){
             builder = AlertDialog.Builder(this)
-            val id = intent.getIntExtra("id", 0)
+            val id = intent.getStringExtra("id")?: ""
 
             builder.setTitle("¿Esta seguro que desea borrar esta nota?")
                 .setMessage("Esta accion es irreversible!!!")
@@ -147,7 +147,7 @@ class Activity_NoteEdit : AppCompatActivity() {
                     Toast.makeText(this, "Eliminando...", Toast.LENGTH_SHORT).show()
                     GlobalScope.launch {
                         val nota = viewModel.soloUnaNota(id)
-                        viewModel.eliminarNota(nota)
+                        viewModel.eliminarNota(nota!!)
                     }
                     finish()
                 }
@@ -165,27 +165,27 @@ class Activity_NoteEdit : AppCompatActivity() {
     //función para agregar contenido en caso de edición de nota.
     private suspend fun setContent(){
         if(intent.hasExtra("id")){
-            val id = intent.getIntExtra("id", 0)
+            val id = intent.getStringExtra("id")?: ""
 
             val nota = viewModel.soloUnaNota(id)
 
             supportActionBar?.apply {
-                title = nota.date
+                title = nota?.date
                 elevation = 0f
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
             }
 
             //Establecer el color al editar Notas.
-            val colorInt: Int = nota.color
+            val colorInt = nota?.color?.toInt()
 
-            binding.notesEditTextMult.setBackgroundColor(colorInt)
-            binding.editTitle.setBackgroundColor(colorInt)
-            binding.notesCardView.setCardBackgroundColor(colorInt)
-            binding.titleCardView.setCardBackgroundColor(colorInt)
+            binding.notesEditTextMult.setBackgroundColor(colorInt?: 0)
+            binding.editTitle.setBackgroundColor(colorInt?: 0)
+            binding.notesCardView.setCardBackgroundColor(colorInt?: 0)
+            binding.titleCardView.setCardBackgroundColor(colorInt?: 0)
 
-            binding.editTitle.setText(nota.title)
-            binding.notesEditTextMult.setText(nota.nota)
+            binding.editTitle.setText(nota?.title)
+            binding.notesEditTextMult.setText(nota?.nota)
         }else{
             Toast.makeText(this, "No se pudieron obtener datos", Toast.LENGTH_LONG).show()
             finish()

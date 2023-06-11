@@ -12,6 +12,7 @@ import com.example.noteme.room.Model
 import com.example.noteme.room.Model_obj
 import com.example.noteme.room.NotesDatabase
 import com.example.noteme.viewModel.noteViewModel
+import com.google.firebase.FirebaseApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -89,8 +90,8 @@ class MainActivity : AppCompatActivity() {
         //flags para vistas
         var flag = false
 
-        var listNotes: MutableList<Model> = mutableListOf()
-        var dataBaseInstance: NotesDatabase? = null
+        //var listNotes: MutableList<Model> = mutableListOf()
+        //var dataBaseInstance: NotesDatabase? = null
     }
 
     //funcion para obtener la fecha actual.

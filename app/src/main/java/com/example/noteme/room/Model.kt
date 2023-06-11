@@ -12,5 +12,6 @@ data class Model(
     @ColumnInfo(name = "title") var title: String,
     @ColumnInfo(name = "nota") var nota: String,
     @ColumnInfo(name = "date") var date: String,
-    @ColumnInfo(name = "color") var color: Int,
+    @ColumnInfo(name = "color") var color: Long,
+    val idFirestore: String ?,
 )
