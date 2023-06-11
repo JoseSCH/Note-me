@@ -8,6 +8,7 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noteme.MainActivity.Companion.flag
+import com.example.noteme.MainActivity.Companion.oneNote
 import com.example.noteme.databinding.CardsBinding
 import com.example.noteme.room.Model
 import com.google.firebase.firestore.ktx.firestore
@@ -40,26 +41,12 @@ class NoteAdapter(var dataList: List<Model>) : RecyclerView.Adapter<NoteAdapter.
         //listener en caso de presionar una nota para editar.
         holder.binding.editCardView.setOnClickListener {
             val editar = Intent(holder.itemView.context, Activity_NoteEdit::class.java)
-
             val context = holder.itemView.context
-            val db = Firebase.firestore
-            val noteRef = db.collection("NoteMe").document(note.id.toString())
 
-            noteRef.get().addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot != null && documentSnapshot.exists()) {
-                    val id = documentSnapshot.id
-                    Toast.makeText(context, "ID de Firebase: $id", Toast.LENGTH_SHORT).show()
-                    editar.putExtra("id", id)
-                    flag = true
-                    context.startActivity(editar)
-                }
-            }.addOnFailureListener { exception ->
-                Toast.makeText(
-                    context,
-                    "Error al obtener ID de Firebase: $exception",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            oneNote = note//Ahora la instancia de la nota se optiene aquí.
+            flag = true
+
+            context.startActivity(editar)
         }
 
 

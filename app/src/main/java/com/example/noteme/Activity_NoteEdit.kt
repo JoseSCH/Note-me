@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.noteme.MainActivity.Companion.flag
+import com.example.noteme.MainActivity.Companion.oneNote
 import com.example.noteme.databinding.ActivityNoteEditBinding
 import com.example.noteme.room.Model
 import com.example.noteme.room.Model_obj
@@ -39,6 +40,7 @@ class Activity_NoteEdit : AppCompatActivity() {
             }
         }else{
             supportActionBar?.apply {
+                elevation = 0f
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
             }
@@ -118,78 +120,61 @@ class Activity_NoteEdit : AppCompatActivity() {
 
     //función para actualizar la nota.
     private suspend fun actualizarNota(){
-        if(intent.hasExtra("id")){
-            val id = intent.getStringExtra("id")?: ""
 
-            val nota =  viewModel.soloUnaNota(id)
+        val nota =  oneNote
 
-            nota?.title = binding.editTitle.text.toString()
-            nota?.nota = binding.notesEditTextMult.text.toString()
-            nota?.date = Model_obj.date
+        nota.title = binding.editTitle.text.toString()
+        nota.nota = binding.notesEditTextMult.text.toString()
+        nota.date = Model_obj.date
 
-            viewModel.actualizarNota(nota!!)
+        viewModel.actualizarNota(nota)
 
-        }else{
-            Toast.makeText(this, "No se pudo actualizar nota", Toast.LENGTH_LONG).show()
-        }
     }
 
     //Función para eliminar la nota.
     private fun eliminarNota(){
-        if(intent.hasExtra("id")){
-            builder = AlertDialog.Builder(this)
-            val id = intent.getStringExtra("id")?: ""
+        builder = AlertDialog.Builder(this)
 
-            builder.setTitle("¿Esta seguro que desea borrar esta nota?")
-                .setMessage("Esta accion es irreversible!!!")
-                .setCancelable(true)
-                .setPositiveButton("Si"){dialogInterface, it ->
-                    Toast.makeText(this, "Eliminando...", Toast.LENGTH_SHORT).show()
-                    GlobalScope.launch {
-                        val nota = viewModel.soloUnaNota(id)
-                        viewModel.eliminarNota(nota!!)
-                    }
-                    finish()
+        builder.setTitle("¿Desea borrar esta nota?")
+            .setMessage("Esta accion es irreversible!!!")
+            .setCancelable(true)
+            .setPositiveButton("Si"){dialogInterface, it ->
+                Toast.makeText(this, "Eliminando...", Toast.LENGTH_SHORT).show()
+                GlobalScope.launch {
+                    val nota = oneNote
+                    viewModel.eliminarNota(nota)
                 }
-                .setNegativeButton("No"){dialogInterface, it ->
-                    Toast.makeText(this, "Accion Cancelada", Toast.LENGTH_SHORT).show()
-                    dialogInterface.cancel()
-                }
-                .show()
-        }else{
-            Toast.makeText(this, "No se pudo eliminar nota", Toast.LENGTH_LONG).show()
-            finish()
-        }
+                finish()
+            }
+            .setNegativeButton("No"){dialogInterface, it ->
+                Toast.makeText(this, "Accion Cancelada", Toast.LENGTH_SHORT).show()
+                dialogInterface.cancel()
+            }
+            .show()
     }
 
     //función para agregar contenido en caso de edición de nota.
-    private suspend fun setContent(){
-        if(intent.hasExtra("id")){
-            val id = intent.getStringExtra("id")?: ""
+    private fun setContent(){
 
-            val nota = viewModel.soloUnaNota(id)
+        val nota = oneNote
 
-            supportActionBar?.apply {
-                title = nota?.date
-                elevation = 0f
-                setDisplayHomeAsUpEnabled(true)
-                setDisplayShowHomeEnabled(true)
-            }
-
-            //Establecer el color al editar Notas.
-            val colorInt = nota?.color?.toInt()
-
-            binding.notesEditTextMult.setBackgroundColor(colorInt?: 0)
-            binding.editTitle.setBackgroundColor(colorInt?: 0)
-            binding.notesCardView.setCardBackgroundColor(colorInt?: 0)
-            binding.titleCardView.setCardBackgroundColor(colorInt?: 0)
-
-            binding.editTitle.setText(nota?.title)
-            binding.notesEditTextMult.setText(nota?.nota)
-        }else{
-            Toast.makeText(this, "No se pudieron obtener datos", Toast.LENGTH_LONG).show()
-            finish()
+        supportActionBar?.apply {
+            title = nota.date
+            elevation = 0f
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
         }
+
+        //Establecer el color al editar Notas.
+        val colorInt = nota.color.toInt()
+
+        binding.notesEditTextMult.setBackgroundColor(colorInt?: 0)
+        binding.editTitle.setBackgroundColor(colorInt?: 0)
+        binding.notesCardView.setCardBackgroundColor(colorInt?: 0)
+        binding.titleCardView.setCardBackgroundColor(colorInt?: 0)
+
+        binding.editTitle.setText(nota.title)
+        binding.notesEditTextMult.setText(nota.nota)
 
     }
 

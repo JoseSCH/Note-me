@@ -28,12 +28,6 @@ class noteViewModel(application: Application) : AndroidViewModel(application) {
     fun guardarNota(nota: Model) =
         viewModelScope.launch(Dispatchers.IO) { repository.guardarNota(nota) }
 
-    //Obtener una nota.
-    suspend fun soloUnaNota(idNota: String) : Model? =
-        withContext(Dispatchers.IO){
-            repository.soloUnaNota(idNota)
-        }
-
     //Actualizat una nota.
     suspend fun actualizarNota(nota: Model) =
         viewModelScope.launch(Dispatchers.IO) { repository.actualizarNota(nota) }

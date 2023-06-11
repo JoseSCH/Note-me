@@ -20,9 +20,6 @@ class NoteRepository constructor(
         NoteFirestore.createNote(nota)
     }
 
-    //Obtener un Nota.
-   suspend fun soloUnaNota(idNota: String): Model? = NoteFirestore.getOneNote(idNota)
-
     //Actualizat una nota.
     suspend fun actualizarNota(model: Model){
         //noteDao.actualizarNota(model)

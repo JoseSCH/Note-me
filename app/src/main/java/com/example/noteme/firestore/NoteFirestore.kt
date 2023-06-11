@@ -28,18 +28,6 @@ object NoteFirestore {
         db.collection("NoteMe").add(model).await()
     }
 
-    suspend fun getOneNote(idNota: String) : Model? {
-        val db = Firebase.firestore
-        val noteRef  = db.collection("NoteMe").document(idNota)
-        val noteSnapshot = noteRef.get().await()
-        return if (noteSnapshot.exists()){
-            noteSnapshot.toObject(Model::class.java)
-        }else{
-            null
-        }
-
-    }
-
     suspend fun updateNote(model: Model) = coroutineScope {
         val db = Firebase.firestore
         val newNoteData = hashMapOf<String, Any>(

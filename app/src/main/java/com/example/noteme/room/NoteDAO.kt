@@ -10,10 +10,6 @@ interface NoteDAO {
     @Query("SELECT * from Notes")
     fun ListarNotas(): Flow<List<Model>>
 
-    //Obtener una sola nota
-    @Query("SELECT * from Notes WHERE id = :idNota")
-    fun soloUnaNota(idNota: Int): Model
-
     //Guardar las notas.
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun guardarNota(model: Model)

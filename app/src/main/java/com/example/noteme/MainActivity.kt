@@ -90,6 +90,8 @@ class MainActivity : AppCompatActivity() {
         //flags para vistas
         var flag = false
 
+        lateinit var oneNote: Model
+
         //var listNotes: MutableList<Model> = mutableListOf()
         //var dataBaseInstance: NotesDatabase? = null
     }
@@ -105,6 +107,7 @@ class MainActivity : AppCompatActivity() {
 
     //Funcion para actualizar el adaptador
     override fun onRestart() {
+        viewModel.getNotesFirestore()
         super.onRestart()
     }
 
