@@ -9,9 +9,9 @@ android {
     namespace 'com.example.noteme'
     compileSdk 33
 
-    buildFeatures{
-        viewBinding true
-    }
+        buildFeatures{
+            viewBinding true
+        }
 
     defaultConfig {
         applicationId "com.example.noteme"
@@ -66,5 +66,7 @@ dependencies {
     //Implementación de FireStore.
     def firestore_version = "24.6.1"
     implementation "com.google.firebase:firebase-firestore-ktx:$firestore_version"
+    implementation "com.google.firebase:firebase-auth:21.0.1"
+    implementation "com.google.android.gms:play-services-auth:19.2.0"
 
 }

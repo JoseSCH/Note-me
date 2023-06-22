@@ -15,6 +15,9 @@
         android:theme="@style/Theme.NoteMe"
         tools:targetApi="31">
         <activity
+            android:name=".Auth"
+            android:exported="false" />
+        <activity
             android:name=".Activity_NoteEdit"
             android:exported="false" />
         <activity

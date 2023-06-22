@@ -12,7 +12,11 @@ import com.example.noteme.room.Model
 import com.example.noteme.room.Model_obj
 import com.example.noteme.room.NotesDatabase
 import com.example.noteme.viewModel.noteViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val login = Intent(this, Auth::class.java)
+        startActivity(login)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setActionBarStyle()
         setButtonAdd()
@@ -109,6 +117,24 @@ class MainActivity : AppCompatActivity() {
     override fun onRestart() {
         viewModel.getNotesFirestore()
         super.onRestart()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == 100){
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            val account = task.getResult(ApiException::class.java)
+
+            if(account != null) {
+
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+
+                FirebaseAuth.getInstance().signInWithCredential(credential)
+            }else{
+                finish()
+            }
+        }
     }
 
 }
