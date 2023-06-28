@@ -15,6 +15,7 @@ import com.example.noteme.viewModel.noteViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.FirebaseApp
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
+enum class ProviderType{
+    BASIC
+}
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: NoteAdapter
@@ -31,11 +35,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val login = Intent(this, Auth::class.java)
-        startActivity(login)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setActionBarStyle()
+
+        val extras = intent.extras
+        val email = extras?.getString("email")
+        val provider = extras?.getString("provider")
+
+
+        setActionBarStyle(email ?: "", provider ?: "")
         setButtonAdd()
 
         GlobalScope.launch {
@@ -47,6 +54,12 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(noteViewModel::class.java)
 
         cargarNotas()
+
+        //Evento de analytics
+        val analytics = FirebaseAnalytics.getInstance(this)
+        val bundle = Bundle()
+        bundle.putString("message", "Integracion de firebase completa")
+        analytics.logEvent("InitScreen", bundle)
     }
 
     //inflar menu.
@@ -57,17 +70,18 @@ class MainActivity : AppCompatActivity() {
 
     //Listener para cada item del menu.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId==R.id.menu_search){
-
+        if(item.itemId==R.id.log_out){
+            FirebaseAuth.getInstance().signOut()
+            onBackPressed()
         }
 
         return super.onOptionsItemSelected(item)
     }
 
     //Aplicar estilo al action bar.
-    private fun setActionBarStyle(){
+    private fun setActionBarStyle(email: String, provider: String){
         supportActionBar?.apply {
-            title = "Note Me"
+            title = email
             elevation = 0f
         }
     }

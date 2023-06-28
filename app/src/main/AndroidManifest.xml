@@ -15,13 +15,13 @@
         android:theme="@style/Theme.NoteMe"
         tools:targetApi="31">
         <activity
-            android:name=".Auth"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".Activity_NoteEdit"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Auth"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

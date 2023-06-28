@@ -67,6 +67,7 @@ dependencies {
     def firestore_version = "24.6.1"
     implementation "com.google.firebase:firebase-firestore-ktx:$firestore_version"
     implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
     implementation "com.google.android.gms:play-services-auth:19.2.0"
     implementation platform('com.google.firebase:firebase-bom:32.1.1')
 
