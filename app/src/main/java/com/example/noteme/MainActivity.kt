@@ -1,8 +1,10 @@
 package com.example.noteme
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
@@ -25,7 +27,8 @@ import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 enum class ProviderType{
-    BASIC
+    BASIC,
+    GOOGLE
 }
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -49,17 +52,24 @@ class MainActivity : AppCompatActivity() {
             getActualDate()
         }
 
+        //Evento de analytics
+        val analytics = FirebaseAnalytics.getInstance(this)
+        val bundle = Bundle()
+        bundle.putString("message", "Integracion de firebase completa")
+        analytics.logEvent("InitScreen", bundle)
+
+        //Guardado de sesión.
+        val prefs = getSharedPreferences("Data", Context.MODE_PRIVATE).edit()
+        prefs.putString("email", email)
+        prefs.putString("provider", provider)
+        prefs.apply()
+
         setContentView(binding.root)
         binding.rvRecycler.layoutManager = LinearLayoutManager(this)
         viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application)).get(noteViewModel::class.java)
 
         cargarNotas()
 
-        //Evento de analytics
-        val analytics = FirebaseAnalytics.getInstance(this)
-        val bundle = Bundle()
-        bundle.putString("message", "Integracion de firebase completa")
-        analytics.logEvent("InitScreen", bundle)
     }
 
     //inflar menu.
@@ -71,6 +81,11 @@ class MainActivity : AppCompatActivity() {
     //Listener para cada item del menu.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId==R.id.log_out){
+            //borrado de datos de usuario.
+            val prefs = getSharedPreferences("Data", Context.MODE_PRIVATE).edit()
+            prefs.clear()
+            prefs.apply()
+
             FirebaseAuth.getInstance().signOut()
             onBackPressed()
         }
@@ -131,24 +146,6 @@ class MainActivity : AppCompatActivity() {
     override fun onRestart() {
         viewModel.getNotesFirestore()
         super.onRestart()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if(requestCode == 100){
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            val account = task.getResult(ApiException::class.java)
-
-            if(account != null) {
-
-                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-
-                FirebaseAuth.getInstance().signInWithCredential(credential)
-            }else{
-                finish()
-            }
-        }
     }
 
 }

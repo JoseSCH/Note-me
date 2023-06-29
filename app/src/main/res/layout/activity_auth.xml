@@ -7,14 +7,15 @@
     tools:context=".Auth">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/linearXD"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
 
         <EditText
@@ -37,53 +38,55 @@
             tools:layout_editor_absoluteY="144dp"
             android:hint="Contraseña" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <Button
-            android:id="@+id/B1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:background="@color/purple_700"
-            android:text="Registrar"
-            tools:layout_editor_absoluteX="85dp"
-            tools:layout_editor_absoluteY="303dp" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        <Button
-            android:id="@+id/B2"
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/B1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@color/purple_700"
+                android:text="Registrar"
+                tools:layout_editor_absoluteX="85dp"
+                tools:layout_editor_absoluteY="303dp" />
+
+            <Button
+                android:id="@+id/B2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="@color/orange"
+                android:text="Acceder"
+                tools:layout_editor_absoluteX="85dp"
+                tools:layout_editor_absoluteY="303dp" />
+
+
+        </LinearLayout>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/googleButton"
+            android:layout_width="261dp"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:background="@color/orange"
-            android:text="Acceder"
-            tools:layout_editor_absoluteX="85dp"
-            tools:layout_editor_absoluteY="303dp" />
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="490dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+        </com.google.android.gms.common.SignInButton>
 
     </LinearLayout>
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/googleButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-    </com.google.android.gms.common.SignInButton>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
