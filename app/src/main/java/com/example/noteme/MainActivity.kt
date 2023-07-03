@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.noteme.databinding.ActivityMainBinding
@@ -87,7 +88,12 @@ class MainActivity : AppCompatActivity() {
             prefs.apply()
 
             FirebaseAuth.getInstance().signOut()
+
+            val intent = Intent(this, Auth::class.java)
+            startActivity(intent)
+
             onBackPressed()
+            finish()
         }
 
         return super.onOptionsItemSelected(item)

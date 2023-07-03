@@ -96,15 +96,8 @@ class Auth : AppCompatActivity() {
             putExtra("provider", provider.toString())
         }
 
-        mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
         startActivity(mainIntent)
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        binding.linearXD.visibility = View.VISIBLE
+        finish()
     }
     private fun session(){
 
@@ -115,6 +108,22 @@ class Auth : AppCompatActivity() {
         if(email != null && provider != null){
             binding.linearXD.visibility = View.INVISIBLE
             showAll(email, ProviderType.valueOf(provider))
+        }
+
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
+        val prefs = getSharedPreferences("Data", Context.MODE_PRIVATE)
+        val email = prefs.getString("email", null)
+        val provider = prefs.getString("provider", null)
+
+        if(email != null && provider != null){
+            binding.linearXD.visibility = View.INVISIBLE
+            showAll(email, ProviderType.valueOf(provider))
+        }else{
+            binding.linearXD.visibility = View.VISIBLE
         }
 
     }
