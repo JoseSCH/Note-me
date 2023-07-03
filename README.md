@@ -1,2 +1,2 @@
 # Note-me
-Implementando la biblioteca ROOM para gestiones de datos mediante SQLite.
+Parte final del proyecto, se implementó un log in propio de firestore y también la posibilidad de hacer log in con cuenta de google.
