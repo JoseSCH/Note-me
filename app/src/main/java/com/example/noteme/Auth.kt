@@ -96,6 +96,8 @@ class Auth : AppCompatActivity() {
             putExtra("provider", provider.toString())
         }
 
+        mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
         startActivity(mainIntent)
     }
 
